@@ -7,16 +7,28 @@
 
 class NexusCleaner {
 
-    def settings = [ 
-        baseUrl: 'http://localhost:8081/nexus/service/local/repositories/releases/content/', 
+    def settings = [
+        baseUrl: 'http://localhost:8081/nexus/service/local/repositories/releases/content/'
      ];
 
 
     def static main( def args )
     {
-        def nc = new NexusCleaner();
-        nc.findRC();
+      if (args.length != 2)
+      {
+        println "Usage: /home/smcleod/groovy-1.7.10/bin/groovy NexusCleaner.groovy com/theice/test"
+        System.exit(1)
+      }
+      def nc = new NexusCleaner();
+      nc.findRelease(args[0]);
     }
+
+    def findRelease( def rootUri )
+    {
+      def urls = scanRepo( settings.baseUrl+rootUri )
+      println urls
+    }
+
 
     def findRC()
     {
@@ -52,7 +64,7 @@ class NexusCleaner {
                 }
                 else
                 {
-                    urls << item.resourceURI.text();
+                    urls << [item.resourceURI.text(),item.lastModified.text()];
                 }
             }
         }
