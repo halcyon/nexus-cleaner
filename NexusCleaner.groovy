@@ -25,7 +25,7 @@ class NexusCleaner {
         def urls = scanRepo( settings.baseUrl );
 
         urls.findAll(){ it ==~ /.*-RC\d+\/$/ }.each() {
-            ver -> 
+            ver
             // calculate what would be the final version
             def rel = ver.replaceAll(/-RC\d+\/$/, '/' );
             // check if the final version already exists
@@ -41,7 +41,7 @@ class NexusCleaner {
         def urls = [];
         def data = fetchContent( url );
         data.data.'content-item'.each(){
-            item
+            item-> 
             def name = item.text.text();
             if( item.leaf.text() == 'false' )
             {
@@ -50,9 +50,7 @@ class NexusCleaner {
                     urls += scanRepo( item.resourceURI.text() );
                 }
                 else
-                {
                     urls << item.resourceURI.text();
-                }
             }
         }
 
