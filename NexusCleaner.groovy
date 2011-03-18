@@ -46,7 +46,7 @@ class NexusCleaner {
             def name = item.text.text();
             if( item.leaf.text() == 'false' )
             {
-                if(!( name ==~ /^\d+\.\d+.*/ )) // it's a release number level
+                if(!( name ==~ /^\d+(\.\d+)*.*/ )) // it's a release number level
                 {
                     urls += scanRepo( item.resourceURI.text() );
                 }
