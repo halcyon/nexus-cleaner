@@ -2,8 +2,7 @@
 *
 * export NUSER=admin
 * export NPASS=<NexusAdminPass>
-* groovy NexusCleaner.groovy  | xargs -iF curl -v -X DELETE -u $NUSER:$NPASS F
-*
+* groovy NexusCleaner.groovy  | xargs -iF curl -v -X DELETE -u $NUSER:$NPASS F *
 */
 
 class NexusCleaner {
@@ -24,6 +23,8 @@ class NexusCleaner {
 
         def urls = scanRepo( settings.baseUrl );
 
+        println urls
+
         urls.findAll(){ it ==~ /.*-RC\d+\/$/ }.each() {
             ver
             // calculate what would be the final version
@@ -41,19 +42,20 @@ class NexusCleaner {
         def urls = [];
         def data = fetchContent( url );
         data.data.'content-item'.each(){
-            item-> 
+            item->
             def name = item.text.text();
             if( item.leaf.text() == 'false' )
             {
-                if(!( name ==~ /^\d+\.\d+\.\d+\.\d+.*/ )) // it's a release number level
+                if(!( name ==~ /^\d+\.\d+.*/ )) // it's a release number level
                 {
                     urls += scanRepo( item.resourceURI.text() );
                 }
                 else
+                {
                     urls << item.resourceURI.text();
+                }
             }
         }
-
         return urls;
     }
 
