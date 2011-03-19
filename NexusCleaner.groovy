@@ -83,8 +83,14 @@ class NexusCleaner {
 
   def fetchContent( String url )
   {
-    def txt = new URL( url ).text
-    def recs = new XmlSlurper().parseText( txt )
+    try {
+      def txt = new URL( url ).text
+      def recs = new XmlSlurper().parseText( txt )
+    }
+    catch (FileNotFoundException e){
+      println "Invalid URL: ${e.message}"
+      System.exit(1)
+    }
     return recs
   }
 
