@@ -5,7 +5,7 @@ import groovy.time.*
 *
 * export NUSER=admin
 * export NPASS=<NexusAdminPass>
-* groovy NexusCleaner.groovy  | xargs -iF curl -v -X DELETE -u $NUSER:$NPASS F *
+* groovy NexusCleaner.groovy  | xargs -iF curl -v -X DELETE -u $NUSER:$NPASS
 */
 
 class NexusCleaner {
