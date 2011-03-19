@@ -45,7 +45,7 @@ class NexusCleaner {
         if (it[1] < months.seconds.ago)
         {
           def command = settings.curlCommand + " " + it[0]
-          def proc = command.execute()
+//          def proc = command.execute()
           proc.waitFor()
           println command
           println "return code: ${ proc.exitValue()}"
