@@ -1,13 +1,6 @@
 #!/usr/bin/env groovy
 import groovy.time.*
 
-/*
-*
-* export NUSER=admin
-* export NPASS=<NexusAdminPass>
-* groovy NexusCleaner.groovy  | xargs -iF curl -v -X DELETE -u $NUSER:$NPASS
-*/
-
 class NexusCleaner {
 
   def settings = [
@@ -21,7 +14,7 @@ class NexusCleaner {
   {
     if (args.length < 2)
     {
-      println "Usage: groovy NexusCleaner.groovy URI months debug"
+      println "Usage: groovy NexusCleaner.groovy <URI> <months> [debug]"
       System.exit(1)
     }
 
@@ -49,7 +42,7 @@ class NexusCleaner {
     use ( TimeCategory ) {
       urls.each
       {
-        if (it[1] < months.months.ago)
+        if (it[1] < months.seconds.ago)
         {
           def command = settings.curlCommand + " " + it[0]
           def proc = command.execute()
