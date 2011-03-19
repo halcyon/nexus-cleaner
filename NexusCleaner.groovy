@@ -1,3 +1,4 @@
+#!/usr/bin/env groovy
 import groovy.time.*;
 
 /*
