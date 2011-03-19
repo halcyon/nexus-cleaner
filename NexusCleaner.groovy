@@ -42,7 +42,7 @@ class NexusCleaner {
     use ( TimeCategory ) {
       urls.each
       {
-        if (it[1] < months.months.ago)
+        if (it[1] < months.hours.ago)
         {
           println it[0]
         }
