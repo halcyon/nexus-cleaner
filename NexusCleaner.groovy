@@ -44,7 +44,6 @@ class NexusCleaner {
       {
         if (it[1] < months.months.ago)
         {
-          println it[1]
           println it[0]
         }
       }
