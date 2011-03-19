@@ -28,9 +28,9 @@ class NexusCleaner {
     def findRelease( def rootUri )
     {
       def urls = scanRepo( settings.baseUrl+rootUri )
-      println urls
+      urls = urls.collect() { [it[0], new Date().parse('yyyy-mm-dd hh:mm:ss.S zzz',it[1])] }
 
-
+      urls.each { println it }
       use ( TimeCategory ) {
             // application on numbers:
             println 1.minute.from.now
@@ -38,6 +38,7 @@ class NexusCleaner {
             // application on dates
             def someDate = new Date()
             println someDate - 3.months 
+            urls.each{ println it[1] }
       }
 
 
