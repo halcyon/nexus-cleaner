@@ -1,3 +1,5 @@
+import groovy.time.*;
+
 /*
 *
 * export NUSER=admin
@@ -16,7 +18,7 @@ class NexusCleaner {
     {
       if (args.length != 2)
       {
-        println "Usage: /home/smcleod/groovy-1.7.10/bin/groovy NexusCleaner.groovy com/theice/test"
+        println "Usage: groovy NexusCleaner.groovy URI"
         System.exit(1)
       }
       def nc = new NexusCleaner();
@@ -27,6 +29,19 @@ class NexusCleaner {
     {
       def urls = scanRepo( settings.baseUrl+rootUri )
       println urls
+
+
+      use ( TimeCategory ) {
+            // application on numbers:
+            println 1.minute.from.now
+            println 10.days.ago
+            // application on dates
+            def someDate = new Date()
+            println someDate - 3.months 
+      }
+
+
+
     }
 
 
