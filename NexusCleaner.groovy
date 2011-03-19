@@ -11,19 +11,26 @@ import groovy.time.*
 class NexusCleaner {
 
   def settings = [
-      baseUrl: 'http://localhost:8081/nexus/service/local/repositories/releases/content/'
+      baseUrl:
+      'http://localhost:8081/nexus/service/local/repositories/releases/content/',
+      curlCommand: 'curl -v -X DELETE -u admin:admin123'
     ]
 
 
   def static main( def args )
   {
-    if (args.length != 2)
+    if (args.length < 2)
     {
-      println "Usage: groovy NexusCleaner.groovy URI months"
+      println "Usage: groovy NexusCleaner.groovy URI months debug"
       System.exit(1)
     }
+
     def uri = args[0]
     def months = args[1].toInteger()
+
+    def debug = false
+
+    if (args.length > 2) debug = true
 
     if ( months < 1 )
     {
@@ -31,10 +38,10 @@ class NexusCleaner {
       System.exit(1)
     }
     def nc = new NexusCleaner()
-    nc.findRelease(uri, months)
+    nc.findRelease(uri, months, debug)
   }
 
-  def findRelease( def uri, def months )
+  def findRelease( def uri, def months, def debug )
   {
     def urls = scanRepo( settings.baseUrl+uri )
     urls = urls.collect() { [it[0], new Date().parse('yyyy-MM-dd HH:mm:ss.S zzz',it[1])] }
@@ -42,9 +49,18 @@ class NexusCleaner {
     use ( TimeCategory ) {
       urls.each
       {
-        if (it[1] < months.hours.ago)
+        if (it[1] < months.months.ago)
         {
-          println it[0]
+          def command = settings.curlCommand + " " + it[0]
+          def proc = command.execute()
+          proc.waitFor()
+          println command
+          println "return code: ${ proc.exitValue()}"
+          if (debug)
+          {
+            println "stderr: ${proc.err.text}"
+            println "stdout: ${proc.in.text}"
+          }
         }
       }
     }
