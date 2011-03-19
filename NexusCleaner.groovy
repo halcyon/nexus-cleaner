@@ -18,26 +18,35 @@ class NexusCleaner {
     {
       if (args.length != 2)
       {
-        println "Usage: groovy NexusCleaner.groovy URI"
+        println "Usage: groovy NexusCleaner.groovy URI months"
+        System.exit(1)
+      }
+      def uri = args[0]
+      def months = args[1].toInteger()
+
+      if ( months < 1 )
+      {
+        println "Months must be greater than 0"
         System.exit(1)
       }
       def nc = new NexusCleaner();
-      nc.findRelease(args[0]);
+      nc.findRelease(uri, months);
     }
 
-    def findRelease( def rootUri )
+    def findRelease( def uri, def months )
     {
-      def urls = scanRepo( settings.baseUrl+rootUri )
+      def urls = scanRepo( settings.baseUrl+uri )
       urls = urls.collect() { [it[0], new Date().parse('yyyy-mm-dd hh:mm:ss.S zzz',it[1])] }
+      println months
 
       urls.each { println it }
       use ( TimeCategory ) {
             // application on numbers:
-            println 1.minute.from.now
-            println 10.days.ago
+//            println 1.minute.from.now
+ //           println 10.days.ago
             // application on dates
-            def someDate = new Date()
-            println someDate - 3.months 
+  //          def someDate = new Date()
+   //         println someDate - 3.months 
             urls.each{ println it[1] }
       }
 
