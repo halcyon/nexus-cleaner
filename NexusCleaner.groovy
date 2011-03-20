@@ -9,41 +9,31 @@ class NexusCleaner {
       curlCommand: 'curl -v -X DELETE -u admin:admin123'
     ]
 
-  def binding = new Binding()
-
   def static main(def args) {
-    if (args.length < 3) {
-      println "Usage: ./NexusCleaner.groovy <nexusurl> <namespace> <months> [debug] [real]"
-      println "e.g.: ./NexusCleaner.groovy http://localhost:8081/nexus com/theice 1 debug"
-      System.exit(1)
-    }
 
-    def nexusurl = args[0]
-    def namespace = args[1]
-    def months = args[2].toInteger()
-    if (months < 1) {
-      println "Months must be greater than 0"
-      System.exit(1)
-    }
-
-    def debug = false
-    if (args.length > 3) debug = true
-
-    def real = false
-    if (args.length > 4) real = true
+    def cli = new CliBuilder(usage:'./NexusCleander.groovy -url <url> -ns <ns> -age <age> -user <user> -pass <pass> [real] [debug]')
+    cli.url(args:1, argName:'url', required:true, 'URL to Nexus instance')
+    cli.ns(args:1, argName:'ns', required:true, 'Namespace in Nexus to clean e.g. com/theice/ptms/ICEptms')
+    cli.age(args:1, argName:'age', required:true, 'Artifacts older than this age given in months will be removed')
+    cli.debug('Enable Debug Mode')
+    cli.real('Execute removal - if not set defaults to a dry run')
+    cli.user(args:1, argName:'user', required:true, 'Nexus user')
+    cli.pass(args:1, argName: 'pass', required:true, 'Nexus password')
+    cli.help('This help message')
+    def options = cli.parse(args)
 
     def nc = new NexusCleaner()
-    def url = nexusurl+settings.baseUri+namespace
-    nc.findRelease( url, months, debug, real)
+    def url = options.url+settings.baseUri+options.ns
+    nc.findRelease(url, options.age.toInteger(), options.debug, options.real)
   }
 
-  def findRelease(def url, def months, def debug, def real) {
+  def findRelease(def url, def age, def debug, def real) {
     def urls = scanRepo(url)
     urls = urls.collect() { [it[0], new Date().parse('yyyy-MM-dd HH:mm:ss.S zzz',it[1])] }
 
     use (TimeCategory) {
       urls.each {
-        if (it[1] < months.seconds.ago) {
+        if (it[1] < age.seconds.ago) {
           def command = settings.curlCommand + " " + it[0]
           println command
           if (real) {
