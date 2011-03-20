@@ -12,7 +12,8 @@ class NexusCleaner {
 
   def static main(def args) {
     if (args.length < 3) {
-      println "Usage: groovy NexusCleaner.groovy <nexusurl> <namespace> <months> [debug]"
+      println "Usage: ./NexusCleaner.groovy <nexusurl> <namespace> <months> [debug]"
+      println "e.g.: ./NexusCleaner.groovy http://localhost:8081/nexus com/theice 1 debug"
       System.exit(1)
     }
 
@@ -53,20 +54,19 @@ class NexusCleaner {
     }
   }
 
-
   def scanRepo(def url) {
     def urls = []
     def data = fetchContent( url )
     data.data.'content-item'.each() {
       item->
       def name = item.text.text()
-      if(item.leaf.text() == 'false') {
-        if(!( name ==~ /^\d+(\.\d+)*.*/ )) {
-            urls += scanRepo( item.resourceURI.text() )
-        }
-        else {
+      if (item.leaf.text() == 'false') {
+        if (name ==~ /^\d+(\.\d+)*.*/) {
             // it's a release number level
             urls << [item.resourceURI.text(),item.lastModified.text()]
+        }
+        else {
+            urls += scanRepo( item.resourceURI.text() )
         }
       }
     }
