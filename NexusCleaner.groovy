@@ -4,8 +4,6 @@ import groovy.time.*
 class NexusCleaner {
 
   def static settings = [
-      baseUrl:
-      'http://localhost:8082/nexus/service/local/repositories/releases/content/',
       baseUri:
       '/service/local/repositories/releases/content/',
       curlCommand: 'curl -v -X DELETE -u admin:admin123'
