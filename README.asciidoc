@@ -1,0 +1,35 @@
+Nexus Release Cleaner
+=====================
+:Author: Scott McLeod
+:Email: HalcyonBlue@gmail.com
+:Date: 3/20/2011
+
+Nexus Release Cleaner
+---------------------
+Cleans out old releases in Nexus
+
+Why?
+----
+Nexus can remove snapshots from repositories as a scheduled task but can not
+remove releases
+
+Usage
+-----
+Some projects are released more frequently and consume more space than
+others, you can specify which part of the repository you want to clean
+
+-----------------------------------------------------------------------------
+usage: ./NexusCleander.groovy -url <url> -ns <ns> -age <age> -user <user>
+                              -pass <pass> [-arm] [-debug <debugLevel>]
+ -age <# of months>   Remove everything in the namespace older than age
+ -arm                 Execute removal - if not set defaults to a dry run
+ -debug <level>       Enable Debug Mode
+ -help                This help message
+ -ns <ns>             Namespace in Nexus to clean e.g.
+                      com/nexuscleaner/someproject
+ -pass <pass>         Nexus password
+ -url <url>           URL to Nexus instance e.g.
+                      http://localhost:8081/nexus
+ -user <user>         Nexus user
+-----------------------------------------------------------------------------
+
